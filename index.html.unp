@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malla de la Princesa Antonia 👑</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f6ff;
+    }
+    header {
+      background-color: #d8c4f7;
+      color: #5e2b97;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .mensaje {
+      background-color: #d1f7c4;
+      color: #256029;
+      text-align: center;
+      padding: 0.7rem;
+      font-size: 1rem;
+    }
+    .contenedor {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 2rem;
+      gap: 1rem;
+    }
+    .semestre {
+      background-color: #ede4ff;
+      border-radius: 10px;
+      padding: 1rem;
+      width: 220px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .semestre h2 {
+      text-align: center;
+      color: #7b3ca0;
+      font-size: 1.2rem;
+    }
+    .curso {
+      background-color: white;
+      padding: 0.4rem;
+      margin: 0.3rem 0;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+    }
+    .curso:hover {
+      background-color: #f2e9ff;
+    }
+    .aprobado {
+      text-decoration: line-through;
+      background-color: #d1ffd6;
+      color: #333;
+    }
+    .mensaje-logro {
+      color: #5b3c88;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>👑 Malla de la Princesa Antonia 👑</header>
+  <div class="mensaje">¡Felicidades Antonia, eres la mejor! ✨</div>
+
+  <div class="contenedor" id="malla">
+    <!-- Los 10 ciclos -->
+    <script>
+      const cursosPorCiclo = {
+        1: ['Introducción a la Odontología', 'Matemática y Física Aplicada', 'Biología Celular', 'Anatomía Humana', 'Estrategias para el Aprendizaje', 'Antropología'],
+        2: ['Promoción y Prevención en Salud', 'Biología Molecular y Genética', 'Bioquímica General', 'Anatomía de Cabeza y Cuello', 'Histoembriología'],
+        3: ['Preclínico y Rehabilitación Oral I', 'Histología Oral', 'Microbiología General', 'Fisiología Humana', 'Salud Poblacional', 'Ética'],
+        4: ['Preclínico y Materiales Dentales', 'Simulación Clínica Integral I', 'Patología Oral', 'Farmacología', 'Radiología Oral'],
+        5: ['Preclínico y Rehabilitación Oral I', 'Simulación Clínica Integral II', 'Inicio a la Clínica Integral I', 'Patología Diagnóstica I', 'Periodoncia Oral I'],
+        6: ['Preclínico y Rehabilitación Oral II', 'Simulación Clínica Integral III', 'Inicio a la Clínica Integral II', 'Imagenología Diagnóstica II'],
+        7: ['Endodoncia I', 'Odontopediatría I', 'Clínica Integral I', 'Periodoncia Oral II', 'Diagnóstico Integral'],
+        8: ['Cirugía Bucal I', 'Odontopediatría II', 'Clínica Integral II', 'Ortodoncia I', 'Rehabilitación Oral Avanzada'],
+        9: ['Clínica Integral III', 'Odontología Preventiva', 'Cirugía Bucal II', 'Investigación Aplicada I', 'Electivo I'],
+        10: ['Clínica Integral IV', 'Odontología Legal', 'Administración en Salud', 'Investigación Aplicada II', 'Electivo II']
+      };
+
+      const malla = document.getElementById("malla");
+
+      for (let i = 1; i <= 10; i++) {
+        const semestre = document.createElement("div");
+        semestre.className = "semestre";
+        const titulo = document.createElement("h2");
+        titulo.textContent = `Semestre ${i}`;
+        semestre.appendChild(titulo);
+
+        cursosPorCiclo[i].forEach(curso => {
+          const divCurso = document.createElement("div");
+          divCurso.className = "curso";
+          divCurso.textContent = curso;
+          divCurso.onclick = () => {
+            divCurso.classList.toggle("aprobado");
+            verificarCiclo(semestre, i);
+          };
+          semestre.appendChild(divCurso);
+        });
+
+        const mensajeLogro = document.createElement("div");
+        mensajeLogro.className = "mensaje-logro";
+        mensajeLogro.textContent = `¡Completaste todo el ciclo ${i}! 🌟`;
+        semestre.appendChild(mensajeLogro);
+
+        malla.appendChild(semestre);
+      }
+
+      function verificarCiclo(contenedor, numero) {
+        const cursos = contenedor.querySelectorAll(".curso");
+        const mensaje = contenedor.querySelector(".mensaje-logro");
+        const todosAprobados = Array.from(cursos).every(el => el.classList.contains("aprobado"));
+        mensaje.style.display = todosAprobados ? "block" : "none";
+      }
+    </script>
+  </div>
+</body>
+</html>
