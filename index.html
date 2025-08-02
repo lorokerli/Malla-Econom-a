@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Curricular de Economía</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f0fc;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #6a1b9a;
+    }
+    .container {
+      display: flex;
+      overflow-x: auto;
+    }
+    .ciclo {
+      min-width: 220px;
+      margin: 0 10px;
+      background: #ede7f6;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    }
+    .ciclo h2 {
+      text-align: center;
+      font-size: 16px;
+      color: #4a148c;
+    }
+    .curso {
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 8px;
+      background-color: #d1c4e9;
+      cursor: pointer;
+      position: relative;
+    }
+    .curso.aprobado {
+      background-color: #b2dfdb;
+      text-decoration: line-through;
+    }
+    .curso.bloqueado {
+      background-color: #f3e5f5;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .tooltip {
+      visibility: hidden;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      border-radius: 4px;
+      position: absolute;
+      z-index: 1;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+    }
+    .curso:hover .tooltip {
+      visibility: visible;
+    }
+    .resumen {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #4a148c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Curricular de Economía</h1>
+  <div class="resumen">
+    Créditos aprobados: <span id="creditos-aprobados">0</span> / <span id="creditos-totales">0</span>
+  </div>
+  <div class="container" id="malla"></div>
+
+  <script>
+    const cursosPorCiclo = {
+      "Primer Ciclo": [
+        { nombre: "Comunicación", creditos: 3 },
+        { nombre: "Estadística General", creditos: 4 },
+        { nombre: "Fundamentos de Economía I", creditos: 4 },
+        { nombre: "Geometría Analítica", creditos: 4 },
+        { nombre: "Matemática Básica", creditos: 4 },
+        { nombre: "Metodología de los Estudios Superiores Universitarios", creditos: 2 },
+        { nombre: "Historia Económica del Perú", creditos: 3 }
+      ],
+      "Segundo Ciclo": [
+        { nombre: "Álgebra Lineal", creditos: 4 },
+        { nombre: "Antropología", creditos: 2 },
+        { nombre: "Biología y Educación Ambiental", creditos: 3 },
+        { nombre: "Cálculo Infinitesimal I", creditos: 4 },
+        { nombre: "Estadística Aplicada", creditos: 4 },
+        { nombre: "Filosofía y Ética", creditos: 2 },
+        { nombre: "Fundamentos de Economía II", creditos: 4 }
+      ],
+      "Tercer Ciclo": [
+        { nombre: "Administración empresarial", creditos: 4 },
+        { nombre: "Análisis Microeconómico I", creditos: 4 },
+        { nombre: "Cálculo Infinitesimal II", creditos: 4 },
+        { nombre: "Muestreo Estadístico", creditos: 4 },
+        { nombre: "Sociología", creditos: 2 },
+        { nombre: "Visión Contemporánea del Perú y del Mundo", creditos: 2 },
+        { nombre: "Técnica de Programación", creditos: 4 }
+      ],
+      "Cuarto Ciclo": [
+        { nombre: "Análisis Microeconómico II", creditos: 4 },
+        { nombre: "Cálculo Infinitesimal III", creditos: 4 },
+        { nombre: "Geografía General", creditos: 2 },
+        { nombre: "Introducción a la Contabilidad", creditos: 2 },
+        { nombre: "Matemática Financiera", creditos: 4 },
+        { nombre: "Psicología General", creditos: 2 },
+        { nombre: "Realidad Nacional y Regional", creditos: 3 }
+      ],
+      "Quinto Ciclo": [
+        { nombre: "Análisis Macroeconómico I", creditos: 4 },
+        { nombre: "Contabilidad intermedia", creditos: 4 },
+        { nombre: "Economía Matemática", creditos: 4 },
+        { nombre: "Economía Sectorial y de Recursos Naturales", creditos: 4 },
+        { nombre: "Ingles I", creditos: 2 },
+        { nombre: "Derecho Económico", creditos: 2 },
+        { nombre: "Investigación de Mercados", creditos: 3 }
+      ],
+      "Sexto Ciclo": [
+        { nombre: "Análisis de Balances", creditos: 4 },
+        { nombre: "Análisis Macroeconómico II", creditos: 4 },
+        { nombre: "Econometría I", creditos: 4 },
+        { nombre: "Historia del pensamiento económico", creditos: 3 },
+        { nombre: "Ingles II", creditos: 2 },
+        { nombre: "Investigación Operativa", creditos: 3 },
+        { nombre: "Seminario de Problemas Poblacionales", creditos: 3 }
+      ],
+      "Séptimo Ciclo": [
+        { nombre: "Econometría II", creditos: 4 },
+        { nombre: "Economía Financiera", creditos: 4 },
+        { nombre: "Economía Publica", creditos: 4 },
+        { nombre: "Metodología de la Investigación Económica", creditos: 4 },
+        { nombre: "Planificación y Gestión Estratégica", creditos: 4 },
+        { nombre: "Teoría Monetaria", creditos: 4 }
+      ],
+      "Octavo Ciclo": [
+        { nombre: "Econometría III", creditos: 4 },
+        { nombre: "Economía Ambiental y Desarrollo Sostenible", creditos: 4 },
+        { nombre: "Economía Internacional", creditos: 4 },
+        { nombre: "Finanzas corporativas", creditos: 4 },
+        { nombre: "Regulación Económica", creditos: 4 },
+        { nombre: "Seminario de Tesis", creditos: 2 },
+        { nombre: "Ingles Especializado", creditos: 2 }
+      ],
+      "Noveno Ciclo": [
+        { nombre: "Ciclos y Crecimiento Económico", creditos: 4 },
+        { nombre: "Comercialización", creditos: 4 },
+        { nombre: "Economía del Emprendimiento e innovación", creditos: 4 },
+        { nombre: "Mercado de capitales", creditos: 4 },
+        { nombre: "Negociaciones Económicas Internacionales", creditos: 4 },
+        { nombre: "Proyectos de inversión I", creditos: 4 }
+      ],
+      "Décimo Ciclo": [
+        { nombre: "Economía del Desarrollo Regional", creditos: 4 },
+        { nombre: "Economía Latinoamericana", creditos: 4 },
+        { nombre: "Proyectos de inversión II", creditos: 4 },
+        { nombre: "Trabajos de investigación", creditos: 2 },
+        { nombre: "Seminario de Programación Presupuestaria", creditos: 3 },
+        { nombre: "Seminario de Proyectos de Desarrollo", creditos: 3 }
+      ]
+    };
+
+    const requisitos = {
+      "Álgebra Lineal": ["Matemática Básica"],
+      "Cálculo Infinitesimal I": ["Matemática Básica", "Geometría Analítica"],
+      "Estadística Aplicada": ["Estadística General"],
+      "Fundamentos de Economía II": ["Fundamentos de Economía I"],
+      "Análisis Microeconómico I": ["Fundamentos de Economía II", "Cálculo Infinitesimal I"],
+      "Cálculo Infinitesimal II": ["Cálculo Infinitesimal I"],
+      "Muestreo Estadístico": ["Estadística Aplicada"],
+      "Técnica de Programación": ["Álgebra Lineal", "Cálculo Infinitesimal I"],
+      "Análisis Microeconómico II": ["Análisis Microeconómico I"],
+      "Cálculo Infinitesimal III": ["Cálculo Infinitesimal II"],
+      "Matemática Financiera": ["Matemática Básica"],
+      "Análisis Macroeconómico I": ["Análisis Microeconómico II"],
+      "Contabilidad intermedia": ["Introducción a la Contabilidad"],
+      "Economía Matemática": ["Análisis Microeconómico II", "Cálculo Infinitesimal III"],
+      "Análisis de Balances": ["Contabilidad intermedia"],
+      "Análisis Macroeconómico II": ["Análisis Macroeconómico I"],
+      "Econometría I": ["Análisis Macroeconómico I", "Muestreo Estadístico"],
+      "Historia del pensamiento económico": ["Análisis Macroeconómico I"],
+      "Ingles II": ["Ingles I"],
+      "Investigación Operativa": ["Administración empresarial", "Cálculo Infinitesimal III"],
+      "Econometría II": ["Econometría I"],
+      "Economía Financiera": ["Contabilidad intermedia", "Matemática Financiera"],
+      "Economía Publica": ["Análisis Macroeconómico I"],
+      "Metodología de la Investigación Económica": ["Análisis Macroeconómico II", "Econometría I"],
+      "Planificación y Gestión Estratégica": ["Administración empresarial"],
+      "Teoría Monetaria": ["Análisis Macroeconómico II"],
+      "Econometría III": ["Econometría II"],
+      "Economía Ambiental y Desarrollo Sostenible": ["Economía Sectorial y de Recursos Naturales"],
+      "Economía Internacional": ["Análisis Macroeconómico II"],
+      "Finanzas corporativas": ["Economía Financiera"],
+      "Regulación Económica": ["Análisis Microeconómico II"],
+      "Seminario de Tesis": ["Metodología de la Investigación Económica"],
+      "Ingles Especializado": ["Ingles II"],
+      "Ciclos y Crecimiento Económico": ["Teoría Monetaria", "Economía Publica"],
+      "Comercialización": ["Análisis Microeconómico II"],
+      "Mercado de capitales": ["Finanzas corporativas"],
+      "Negociaciones Económicas Internacionales": ["Economía Internacional"],
+      "Proyectos de inversión I": ["Finanzas corporativas"],
+      "Economía del Desarrollo Regional": ["Econometría III", "Ciclos y Crecimiento Económico"],
+      "Economía Latinoamericana": ["Economía Internacional"],
+      "Proyectos de inversión II": ["Proyectos de inversión I"],
+      "Trabajos de investigación": ["Metodología de la Investigación Económica"],
+      "Seminario de Programación Presupuestaria": ["Planificación y Gestión Estratégica", "Proyectos de inversión I"],
+      "Seminario de Proyectos de Desarrollo": ["Proyectos de inversión I"]
+    };
+
+    const aprobados = new Set(JSON.parse(localStorage.getItem('cursosAprobados') || '[]'));
+
+    function renderMalla() {
+      const container = document.getElementById("malla");
+      container.innerHTML = "";
+      let totalCreditos = 0;
+      let creditosAprobados = 0;
+
+      for (const [ciclo, cursos] of Object.entries(cursosPorCiclo)) {
+        const div = document.createElement("div");
+        div.className = "ciclo";
+        div.innerHTML = `<h2>${ciclo}</h2>`;
+
+        for (const curso of cursos) {
+          totalCreditos += curso.creditos;
+          const requisitosCurso = requisitos[curso.nombre] || [];
+          const bloqueado = requisitosCurso.some(req => !aprobados.has(req));
+
+          const divCurso = document.createElement("div");
+          divCurso.className = "curso";
+          if (aprobados.has(curso.nombre)) {
+            divCurso.classList.add("aprobado");
+            creditosAprobados += curso.creditos;
+          } else if (bloqueado) {
+            divCurso.classList.add("bloqueado");
+          }
+
+          divCurso.textContent = `${curso.nombre} (${curso.creditos})`;
+
+          if (bloqueado) {
+            const tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            tooltip.textContent = "Requiere: " + requisitosCurso.filter(r => !aprobados.has(r)).join(", ");
+            divCurso.appendChild(tooltip);
+          }
+
+          divCurso.onclick = () => {
+            if (!divCurso.classList.contains("bloqueado")) {
+              if (aprobados.has(curso.nombre)) {
+                aprobados.delete(curso.nombre);
+              } else {
+                aprobados.add(curso.nombre);
+              }
+              localStorage.setItem("cursosAprobados", JSON.stringify(Array.from(aprobados)));
+              renderMalla();
+            }
+          };
+
+          div.appendChild(divCurso);
+        }
+
+        container.appendChild(div);
+      }
+
+      document.getElementById("creditos-totales").textContent = totalCreditos;
+      document.getElementById("creditos-aprobados").textContent = creditosAprobados;
+    }
+
+    renderMalla();
+  </script>
+</body>
+</html>
